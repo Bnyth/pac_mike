@@ -1,5 +1,6 @@
 require("Mike")
 require("walls")
+require("Nemesis")
 
 function love.load()
     
@@ -9,6 +10,7 @@ function love.load()
     gameMap = sti('maps/testMap.lua')
     walls:load()
     Mike:load()
+    Nemesis:load()
     
 end
 
@@ -21,4 +23,17 @@ function love.draw()
     gameMap:drawLayer(gameMap.layers["Ground"])
     gameMap:drawLayer(gameMap.layers["WallsDrawing"])
     Mike:draw()
+    -- Nemesis:draw()
+    -- world:draw()
+end
+
+function love.keypressed(key, scancode, isrepeat)
+    Mike:move(key)
+end
+
+function checkCollision(a, b)
+    if a.x + a.width >= b.x and a.x <= b.x + b.width and a.y + a.height >= b.y and a.y <= b.y + b.height then
+        return true
+    end
+    return false
 end
