@@ -15,39 +15,46 @@ end
 function Mike:update(dt)
     self:checkBoundaries()
     self:updateCollider()
+    self:move()
 end
 
-function Mike:move(key)
+function Mike:turnDirections(key)
     local vx = 0
     local vy = 0
     if key == "w" then
         self.wantDirection = "up"
-        -- ta faltando o : aqui, ai ele meio q n consegue usar o self dentro dessa funcao e n identifica a outra funcao dentro dela no wantdirection ou ali embaixo?
         if self:isClosestTileWall(self.wantDirection) == false then
-            vy = -self.speed
             self.currentDirection = self.wantDirection
         end
     elseif key == "a" then
         self.wantDirection = "left"
         if self:isClosestTileWall(self.wantDirection) == false then
-            vy = -self.speed
             self.currentDirection = self.wantDirection
         end
     elseif key == "s" then
         self.wantDirection = "down"
         if self:isClosestTileWall(self.wantDirection) == false then
-            vy = self.speed
             self.currentDirection = self.wantDirection
         end
     elseif key == "d" then
         self.wantDirection = "right"
         if self:isClosestTileWall(self.wantDirection) == false then
-            vy = self.speed
             self.currentDirection = self.wantDirection
         end
-    else
-        return
     end 
+end
+
+function Mike:move()
+    local vx, vy = 0, 0
+    if self.currentDirection == "up" then
+        vy = -self.speed
+    elseif self.currentDirection == "left" then
+        vx = -self.speed
+    elseif self.currentDirection == "down" then
+        vy = self.speed
+    elseif self.currentDirection == "right" then
+        vx = self.speed
+    end
 
     self.collider:setLinearVelocity(vx, vy)
 end
@@ -71,6 +78,9 @@ end
 
 function Mike:draw()
     love.graphics.circle("line", self.x, self.y, self.radius)
+    if self.currentClosestTile then -- debugging
+        love.graphics.rectangle("line", self.currentClosestTile.x, self.currentClosestTile.y, self.currentClosestTile.width, self.currentClosestTile.height)
+    end
 end
 
 function Mike:getPixelPosition()
@@ -83,6 +93,7 @@ end
 
 function Mike:getClosestTile(direction)
     local currentTileX, currentTileY = self:getTilePosition()
+    currentTileX, currentTileY = math.floor(currentTileX), math.floor(currentTileY)
     local closestTileX, closestTileY = currentTileX, currentTileY
     local closestTile = {}
 
@@ -98,14 +109,14 @@ function Mike:getClosestTile(direction)
 
     closestTile.x, closestTile.y = gameMap:convertTileToPixel(closestTileX, closestTileY)
     closestTile.width, closestTile.height = gameMap:getTileDimensions()
+    self.currentClosestTile = closestTile
     return closestTile
 
 end
 
 function Mike:isClosestTileWall(direction)
-    local closestTileWall
-    closestTileWall = self:getClosestTile(direction)
-    return walls:isTileWall(closestTileWal)
+    local closestTileWall = self:getClosestTile(direction)
+    return walls:isTileWall(closestTileWall)
 end
 
 -- 1. pegar tile atual
