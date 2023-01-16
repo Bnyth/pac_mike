@@ -3,58 +3,144 @@ Mike = {}
 function Mike:load()
     self.x = love.graphics.getWidth() / 2
     self.y = love.graphics.getHeight() / 2
-    self.width = 20
-    self.height = 20
-    self.speed = 200
-    self.collider = world:newRectangleCollider(self.x, self.y, self.width, self.height)
+    self.radius = 14
+    self.speed = 90
+    self.diameter = 2 * self.radius
+    self.collider = world:newCircleCollider(self.x, self.y, self.radius)
     self.collider:setFixedRotation(true)
+    self.currentDirection = "up"
+    self.wantDirection = self.currentDirection 
 end
 
 function Mike:update(dt)
-    self:move(dt)
     self:checkBoundaries()
     self:updateCollider()
 end
 
-function Mike:move(dt)
+function Mike:move(key)
     local vx = 0
     local vy = 0
-    if love.keyboard.isDown("w") then
-        vy = -self.speed
-    end
-
-    if love.keyboard.isDown("a") then
-        vx = -self.speed
-    end
-
-    if love.keyboard.isDown("s") then
-        vy = self.speed
-    end
-
-    if love.keyboard.isDown("d") then 
-        vx = self.speed
-    end
+    if key == "w" then
+        self.wantDirection = "up"
+        -- ta faltando o : aqui, ai ele meio q n consegue usar o self dentro dessa funcao e n identifica a outra funcao dentro dela no wantdirection ou ali embaixo?
+        if self:isClosestTileWall(self.wantDirection) == false then
+            vy = -self.speed
+            self.currentDirection = self.wantDirection
+        end
+    elseif key == "a" then
+        self.wantDirection = "left"
+        if self:isClosestTileWall(self.wantDirection) == false then
+            vy = -self.speed
+            self.currentDirection = self.wantDirection
+        end
+    elseif key == "s" then
+        self.wantDirection = "down"
+        if self:isClosestTileWall(self.wantDirection) == false then
+            vy = self.speed
+            self.currentDirection = self.wantDirection
+        end
+    elseif key == "d" then
+        self.wantDirection = "right"
+        if self:isClosestTileWall(self.wantDirection) == false then
+            vy = self.speed
+            self.currentDirection = self.wantDirection
+        end
+    else
+        return
+    end 
 
     self.collider:setLinearVelocity(vx, vy)
 end
 
 function Mike:updateCollider()
-    self.x = self.collider:getX() - self.width / 2
-    self.y = self.collider:getY() - self.height / 2
+    self.x = self.collider:getX()
+    self.y = self.collider:getY()
 end
 
 function Mike:checkBoundaries()
-    if self.y <= -self.height then -- eu q fiz assinado por rora
+    if self.y < -self.diameter then -- eu q fiz assinado por rora
         self.collider:setY(love.graphics.getHeight())
-    elseif self.x <= -self.width then
+    elseif self.x < -self.diameter then
         self.collider:setX(love.graphics.getWidth())
-    elseif self.y >= love.graphics.getHeight() then
+    elseif self.y > love.graphics.getHeight() then
         self.collider:setY(0)
-    elseif self.x >= love.graphics.getWidth() then
+    elseif self.x > love.graphics.getWidth() then
         self.collider:setX(0)
     end
 end
 
 function Mike:draw()
-    love.graphics.rectangle("line", self.x, self.y, self.height, self.width)
+    love.graphics.circle("line", self.x, self.y, self.radius)
 end
+
+function Mike:getPixelPosition()
+    return self.x, self.y
+end
+
+function Mike:getTilePosition()
+    return gameMap:convertPixelToTile(self:getPixelPosition())
+end
+
+function Mike:getClosestTile(direction)
+    local currentTileX, currentTileY = self:getTilePosition()
+    local closestTileX, closestTileY = currentTileX, currentTileY
+    local closestTile = {}
+
+    if direction == "up" then
+        closestTileY = currentTileY - 1
+    elseif direction == "left" then
+        closestTileX = currentTileX - 1
+    elseif direction == "down" then
+        closestTileY = currentTileY + 1
+    elseif direction == "right" then
+        closestTileX = currentTileX + 1
+    end
+
+    closestTile.x, closestTile.y = gameMap:convertTileToPixel(closestTileX, closestTileY)
+    closestTile.width, closestTile.height = gameMap:getTileDimensions()
+    return closestTile
+
+end
+
+function Mike:isClosestTileWall(direction)
+    local closestTileWall
+    closestTileWall = self:getClosestTile(direction)
+    return walls:isTileWall(closestTileWal)
+end
+
+-- 1. pegar tile atual
+-- 2. pegar centro x do mike: x + width / 2
+-- 3. pegar  centro y do mike: y + height / 2
+-- 4. pegar centro x da tile: x + width / 2
+-- 5. pegar centro y da tile: y + height / 2
+-- 6. retornar se centros x sao iguais e se centros y sao iguais
+function Mike:isInTileCenter()
+
+end
+
+-- 1. verificar se mike está centralizado no tile (isInTileCenter)
+-- 2. verificar se tile próxima a direção desejada não é uma parede
+-- 3. retornar (1 && 2)
+function Mike:isAbleToTurn(direction)
+
+end
+
+-- 1. verificar se direction é diferente de currentDirection
+-- 2. verificar se mike está apto a virar
+-- 3. caso (1 && 2) verdadeiro, virar
+function Mike:turnWantDirection(direction) -- após finalizar, colocar função no update e testar
+
+end
+
+-- data de entrega: hoje(amanhã), no MÁXIMO às 19:00!!!!!!!!!!
+-- valendo 100 PONTOS. Boa sorte, meus alunos queridos! Amo vcs.
+-- grupo zap da sala: https://web.whatsapp.com/groups/a279bfm290cd92dfkgn/
+
+-- CRITÉRIO DE NOTA:  (média = 60)
+-- rodou sem problemas = 100; 
+-- rodou = 70 - 90 pontos; 
+-- erro = 10 - 60 pontos;
+-- nem tentou = 0 pontos;
+
+-- caso sintam que vão reprovar, podem me chamar no zapzap, 
+-- que a profa. Aurora dá uma atividade extra pra vcs...
