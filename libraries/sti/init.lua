@@ -1084,6 +1084,10 @@ function Map:getTileProperties(layer, x, y)
 	return tile.properties
 end
 
+function Map:getTileDimensions()
+	return self.tilewidth, self.tileheight
+end
+
 --- Get custom properties from Object
 -- @param layer The Layer that the Object belongs to
 -- @param object The index or name of the Object
