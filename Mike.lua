@@ -66,13 +66,13 @@ end
 
 function Mike:checkBoundaries()
     if self.y < -self.diameter then -- eu q fiz assinado por rora
-        self.collider:setY(love.graphics.getHeight())
+        self.collider:setY(love.graphics.getHeight() + self.radius)
     elseif self.x < -self.diameter then
-        self.collider:setX(love.graphics.getWidth())
-    elseif self.y > love.graphics.getHeight() then
-        self.collider:setY(0)
-    elseif self.x > love.graphics.getWidth() then
-        self.collider:setX(0)
+        self.collider:setX(love.graphics.getWidth() + self.radius)
+    elseif self.y > love.graphics.getHeight() + self.radius then
+        self.collider:setY(-self.radius)
+    elseif self.x > love.graphics.getWidth() + self.radius then
+        self.collider:setX(-self.radius)
     end
 end
 
