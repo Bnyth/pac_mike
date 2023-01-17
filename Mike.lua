@@ -17,6 +17,7 @@ function Mike:update(dt)
     self:updateCollider()
     self:move()
     self:turnWantDirection()
+    self:center()
 end
 
 function Mike:turnDirections(key)
