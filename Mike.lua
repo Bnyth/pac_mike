@@ -127,24 +127,31 @@ end
 -- 5. pegar centro y da tile: y + height / 2
 -- 6. retornar se centros x sao iguais e se centros y sao iguais
 function Mike:isInTileCenter()
-    local currentTileX, currentTileY = self:getTilePosition()
+    local currentTileX, currentTileY = gameMap:convertTileToPixel(self:getTilePosition())
     local currentTileWidth, currentTileHeight = gameMap:getTileDimensions()
-    local mikeCenterX = self.x + self.radius
-    local mikeCenterY = self.y + self.radius
-    local tileCenterX = currentTileX +  currentTileWidth / 2
+    local mikeCenterX = math.floor(self.x + self.radius)
+    local mikeCenterY = math.floor(self.y + self.radius)
+    local tileCenterX = currentTileX + currentTileWidth / 2
     local tileCenterY = currentTileY + currentTileHeight / 2
-
-    if mikeCenterX == tileCenterX and mikeCenterY == tileCenterY then
+    local approximation = 5
+    if approximatelyEquals(mikeCenterX, tileCenterX, approximation) and 
+       approximatelyEquals(mikeCenterY, tileCenterY, approximation) then
         return true
     end -- boa tudo funcionando ate agr
     return false
+end
+
+function Mike:center()
+    if self:isClosestTileWall(self.currentDirection) == true and self:isInTileCenter() == true then
+        self.currentDirection, self.wantDirection = nil, nil 
+    end
 end
 
 -- 1. verificar se mike está centralizado no tile (isInTileCenter)
 -- 2. verificar se tile próxima a direção desejada não é uma parede
 -- 3. retornar (1 && 2)
 function Mike:isAbleToTurn()
-    if self:isInTileCenter() == true and walls:isTileWall() == true then
+    if self:isInTileCenter() == true and walls:isTileWall(self:getClosestTile(self.wantDirection)) == false then
         return true
     end
     return false
