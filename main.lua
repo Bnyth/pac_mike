@@ -37,3 +37,10 @@ function checkCollision(a, b)
     end
     return false
 end
+
+function approximatelyEquals(a, b, approximation)
+    if a >= b - approximation and a <= b + approximation then
+        return true
+    end
+    return false
+end
