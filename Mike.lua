@@ -16,6 +16,7 @@ function Mike:update(dt)
     self:checkBoundaries()
     self:updateCollider()
     self:move()
+    self:turnWantDirection()
 end
 
 function Mike:turnDirections(key)
@@ -88,12 +89,12 @@ function Mike:getPixelPosition()
 end
 
 function Mike:getTilePosition()
-    return gameMap:convertPixelToTile(self:getPixelPosition())
+    local x, y = gameMap:convertPixelToTile(self:getPixelPosition())
+    return math.floor(x), math.floor(y)
 end
 
 function Mike:getClosestTile(direction)
     local currentTileX, currentTileY = self:getTilePosition()
-    currentTileX, currentTileY = math.floor(currentTileX), math.floor(currentTileY)
     local closestTileX, closestTileY = currentTileX, currentTileY
     local closestTile = {}
 
@@ -126,24 +127,39 @@ end
 -- 5. pegar centro y da tile: y + height / 2
 -- 6. retornar se centros x sao iguais e se centros y sao iguais
 function Mike:isInTileCenter()
+    local currentTileX, currentTileY = self:getTilePosition()
+    local currentTileWidth, currentTileHeight = gameMap:getTileDimensions()
+    local mikeCenterX = self.x + self.radius
+    local mikeCenterY = self.y + self.radius
+    local tileCenterX = currentTileX +  currentTileWidth / 2
+    local tileCenterY = currentTileY + currentTileHeight / 2
 
+    if mikeCenterX == tileCenterX and mikeCenterY == tileCenterY then
+        return true
+    end -- boa tudo funcionando ate agr
+    return false
 end
 
 -- 1. verificar se mike está centralizado no tile (isInTileCenter)
 -- 2. verificar se tile próxima a direção desejada não é uma parede
 -- 3. retornar (1 && 2)
-function Mike:isAbleToTurn(direction)
-
+function Mike:isAbleToTurn()
+    if self:isInTileCenter() == true and walls:isTileWall() == true then
+        return true
+    end
+    return false
 end
 
 -- 1. verificar se direction é diferente de currentDirection
 -- 2. verificar se mike está apto a virar
 -- 3. caso (1 && 2) verdadeiro, virar
-function Mike:turnWantDirection(direction) -- após finalizar, colocar função no update e testar
-
+function Mike:turnWantDirection() -- após finalizar, colocar função no update e testar
+    if self.currentDirection ~= self.wantDirection and self:isAbleToTurn() == true then
+        self.currentDirection = self.wantDirection -- n ta conseguindo abrir o chat?
+    end
 end
 
--- data de entrega: hoje(amanhã), no MÁXIMO às 19:00!!!!!!!!!!
+-- data de entrega: 17/01, no MÁXIMO às 19:00!!!!!!!!!!
 -- valendo 100 PONTOS. Boa sorte, meus alunos queridos! Amo vcs.
 -- grupo zap da sala: https://web.whatsapp.com/groups/a279bfm290cd92dfkgn/
 
