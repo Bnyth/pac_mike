@@ -16,7 +16,7 @@ function Mike:update(dt)
     self:checkBoundaries()
     self:updateCollider()
     self:move()
-    self:turnWantDirection()
+    -- self:turnWantDirection()
     self:center()
 end
 
@@ -89,8 +89,12 @@ function Mike:getPixelPosition()
     return self.x, self.y
 end
 
+function Mike:getCenteredPixelPosition()
+    return self.x + self.radius, self.y + self.radius
+end
+
 function Mike:getTilePosition()
-    local x, y = gameMap:convertPixelToTile(self:getPixelPosition())
+    local x, y = gameMap:convertPixelToTile(self:getCenteredPixelPosition())
     return math.floor(x), math.floor(y)
 end
 
@@ -130,11 +134,14 @@ end
 function Mike:isInTileCenter()
     local currentTileX, currentTileY = gameMap:convertTileToPixel(self:getTilePosition())
     local currentTileWidth, currentTileHeight = gameMap:getTileDimensions()
-    local mikeCenterX = math.floor(self.x + self.radius)
-    local mikeCenterY = math.floor(self.y + self.radius)
+    local mikeCenterX = self.x + self.diameter / 2
+    local mikeCenterY = self.y + self.diameter / 2
     local tileCenterX = currentTileX + currentTileWidth / 2
     local tileCenterY = currentTileY + currentTileHeight / 2
     local approximation = 5
+
+    print("x: ", mikeCenterX, tileCenterX)
+    print("y: ", mikeCenterY, tileCenterY)
     if approximatelyEquals(mikeCenterX, tileCenterX, approximation) and 
        approximatelyEquals(mikeCenterY, tileCenterY, approximation) then
         return true

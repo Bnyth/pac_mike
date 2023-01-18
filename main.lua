@@ -40,7 +40,14 @@ end
 
 function approximatelyEquals(a, b, approximation)
     if a >= b - approximation and a <= b + approximation then
+        print("e")
         return true
     end
     return false
 end
+
+function round(num, numDecimalPlaces)
+    local mult = 10^(numDecimalPlaces or 0)
+    return math.floor(num * mult + 0.5) / mult
+  end
+  
