@@ -1,11 +1,13 @@
 Mike = {}
 
 function Mike:load()
-    self.x = love.graphics.getWidth() / 2
-    self.y = love.graphics.getHeight() / 2
+    local spawnTileX, spawnTileY = 10, 11
+    local spawnPixelX, spawnPixelY= gameMap:convertTileToPixel(spawnTileX, spawnTileY)
     self.radius = 14
-    self.speed = 90
     self.diameter = 2 * self.radius
+    self.x = spawnPixelX + self.radius
+    self.y = spawnPixelY + self.radius
+    self.speed = 90
     self.collider = world:newCircleCollider(self.x, self.y, self.radius)
     self.collider:setFixedRotation(true)
     self.currentDirection = "up"
@@ -16,7 +18,7 @@ function Mike:update(dt)
     self:checkBoundaries()
     self:updateCollider()
     self:move()
-    -- self:turnWantDirection()
+    self:turnWantDirection()
     self:center()
 end
 
@@ -25,22 +27,22 @@ function Mike:turnDirections(key)
     local vy = 0
     if key == "w" then
         self.wantDirection = "up"
-        if self:isClosestTileWall(self.wantDirection) == false then
+        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
             self.currentDirection = self.wantDirection
         end
     elseif key == "a" then
         self.wantDirection = "left"
-        if self:isClosestTileWall(self.wantDirection) == false then
+        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
             self.currentDirection = self.wantDirection
         end
     elseif key == "s" then
         self.wantDirection = "down"
-        if self:isClosestTileWall(self.wantDirection) == false then
+        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
             self.currentDirection = self.wantDirection
         end
     elseif key == "d" then
         self.wantDirection = "right"
-        if self:isClosestTileWall(self.wantDirection) == false then
+        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
             self.currentDirection = self.wantDirection
         end
     end 
@@ -138,10 +140,8 @@ function Mike:isInTileCenter()
     local mikeCenterY = self.y + self.diameter / 2
     local tileCenterX = currentTileX + currentTileWidth / 2
     local tileCenterY = currentTileY + currentTileHeight / 2
-    local approximation = 5
+    local approximation = 3
 
-    print("x: ", mikeCenterX, tileCenterX)
-    print("y: ", mikeCenterY, tileCenterY)
     if approximatelyEquals(mikeCenterX, tileCenterX, approximation) and 
        approximatelyEquals(mikeCenterY, tileCenterY, approximation) then
         return true
