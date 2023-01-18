@@ -2,11 +2,12 @@ Mike = {}
 
 function Mike:load()
     local spawnTileX, spawnTileY = 10, 11
-    local spawnPixelX, spawnPixelY= gameMap:convertTileToPixel(spawnTileX, spawnTileY)
+    local spawnPixelX, spawnPixelY = gameMap:convertTileToPixel(spawnTileX, spawnTileY)
+    local tileWidth, tileHeight = gameMap:getTileDimensions()
     self.radius = 14
     self.diameter = 2 * self.radius
-    self.x = spawnPixelX + self.radius
-    self.y = spawnPixelY + self.radius
+    self.x = spawnPixelX + self.radius + tileWidth 
+    self.y = spawnPixelY + self.radius / 2 + tileHeight
     self.speed = 90
     self.collider = world:newCircleCollider(self.x, self.y, self.radius)
     self.collider:setFixedRotation(true)
@@ -27,22 +28,22 @@ function Mike:turnDirections(key)
     local vy = 0
     if key == "w" then
         self.wantDirection = "up"
-        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
+        if self:isClosestTileWall(self.wantDirection) == false then
             self.currentDirection = self.wantDirection
         end
     elseif key == "a" then
         self.wantDirection = "left"
-        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
+        if self:isClosestTileWall(self.wantDirection) == false then
             self.currentDirection = self.wantDirection
         end
     elseif key == "s" then
         self.wantDirection = "down"
-        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
+        if self:isClosestTileWall(self.wantDirection) == false then
             self.currentDirection = self.wantDirection
         end
     elseif key == "d" then
         self.wantDirection = "right"
-        if self:isClosestTileWall(self.wantDirection) == false and self:isInTileCenter() == true then
+        if self:isClosestTileWall(self.wantDirection) == false then
             self.currentDirection = self.wantDirection
         end
     end 
@@ -138,9 +139,9 @@ function Mike:isInTileCenter()
     local currentTileWidth, currentTileHeight = gameMap:getTileDimensions()
     local mikeCenterX = self.x + self.diameter / 2
     local mikeCenterY = self.y + self.diameter / 2
-    local tileCenterX = currentTileX + currentTileWidth / 2
-    local tileCenterY = currentTileY + currentTileHeight / 2
-    local approximation = 3
+    local tileCenterX = currentTileX + currentTileWidth 
+    local tileCenterY = currentTileY + currentTileHeight 
+    local approximation = 5
 
     if approximatelyEquals(mikeCenterX, tileCenterX, approximation) and 
        approximatelyEquals(mikeCenterY, tileCenterY, approximation) then
