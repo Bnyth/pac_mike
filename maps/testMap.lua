@@ -1,7 +1,7 @@
 return {
-  version = "1.5",
+  version = "1.4",
   luaversion = "5.1",
-  tiledversion = "1.8.2",
+  tiledversion = "1.4.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 21,
@@ -34,7 +34,7 @@ return {
         height = 32
       },
       properties = {},
-      wangsets = {},
+      terrains = {},
       tilecount = 3,
       tiles = {}
     }
@@ -52,8 +52,6 @@ return {
       opacity = 1,
       offsetx = 0,
       offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
       properties = {},
       encoding = "lua",
       data = {
@@ -92,8 +90,6 @@ return {
       opacity = 1,
       offsetx = 0,
       offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
       properties = {},
       encoding = "lua",
       data = {
@@ -129,8 +125,6 @@ return {
       opacity = 1,
       offsetx = 0,
       offsety = 0,
-      parallaxx = 1,
-      parallaxy = 1,
       properties = {},
       objects = {
         {
@@ -190,9 +184,9 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 0,
+          x = -32,
           y = 320,
-          width = 128,
+          width = 160,
           height = 32,
           rotation = 0,
           visible = true,
@@ -203,9 +197,9 @@ return {
           name = "",
           type = "",
           shape = "rectangle",
-          x = 0,
+          x = -32,
           y = 256,
-          width = 160,
+          width = 192,
           height = 32,
           rotation = 0,
           visible = true,
@@ -309,7 +303,7 @@ return {
           shape = "rectangle",
           x = 544,
           y = 256,
-          width = 128,
+          width = 160,
           height = 32,
           rotation = 0,
           visible = true,
@@ -322,7 +316,7 @@ return {
           shape = "rectangle",
           x = 512,
           y = 320,
-          width = 160,
+          width = 192,
           height = 32,
           rotation = 0,
           visible = true,
