@@ -1,3 +1,4 @@
+require("Entity")
 require("Mike")
 require("walls")
 require("Nemesis")
@@ -17,13 +18,14 @@ end
 function love.update(dt)
     Mike:update(dt)
     world:update(dt)
+    Nemesis:update(dt)
 end
 
 function love.draw()
     gameMap:drawLayer(gameMap.layers["Ground"])
     gameMap:drawLayer(gameMap.layers["WallsDrawing"])
     Mike:draw()
-    -- Nemesis:draw()
+    Nemesis:draw()
     -- world:draw()
 end
 
