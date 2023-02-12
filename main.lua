@@ -3,6 +3,8 @@ require("Mike")
 require("walls")
 require("Nemesis")
 
+math.randomseed(os.time())
+
 function love.load()
     
     wf = require('libraries/windfield')
@@ -22,8 +24,13 @@ function love.update(dt)
 end
 
 function love.draw()
-    gameMap:drawLayer(gameMap.layers["ground"])
-    gameMap:drawLayer(gameMap.layers["wallsDrawing"])
+    for _, layer in ipairs(gameMap.layers) do
+        if layer.type == "tilelayer" then
+            gameMap:drawLayer(layer)
+    
+        end
+    end
+
     Mike:draw()
     Nemesis:draw()
     -- world:draw()

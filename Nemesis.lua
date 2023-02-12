@@ -12,16 +12,13 @@ function Nemesis:load()
     self.currentDirection = "up"
     self.wantDirection = self.currentDirection
     self.changeDirectionTimer = 0
-    self.changeDirectionDuration = math.random(1, 5) + math.random() -- sem argumentos retorna um numero real de 0 a 1
+    self.changeDirectionDuration = math.random(1, 5) + math.random()
 end
 
--- adiciona tempo ao timer, e verifica se o timer ta maior igual a duraçao,
--- se sim, altera o wantdirection pra oq randommove retornar,
--- define o timer de volta pra 0 e redefine aleatoriamente o duracao
 function Nemesis:changeDirectionRandomly(dt)
     self.changeDirectionTimer = self.changeDirectionTimer + dt
     if self.changeDirectionTimer >= self.changeDirectionDuration then
-        self.wantDirection = self:randomMove()
+        self.wantDirection = self:getRandomDirection()
         self.changeDirectionTimer = 0
         self.changeDirectionDuration = math.random(1, 5) + math.random()
     end
@@ -37,7 +34,7 @@ function Nemesis:update(dt)
     self:changeDirectionRandomly(dt)
 end
 
-function Nemesis:randomMove()
+function Nemesis:getRandomDirection()
     local randomNumber
     local randomDirection = self.currentDirection
     while self.currentDirection == randomDirection or self:isClosestTileWall(randomDirection) do
@@ -55,10 +52,13 @@ function Nemesis:draw()
     end
 end
 
+function Nemesis:setCurrentDirection(direction)
+    self.currentDirection = direction
+    self.changeDirectionTimer = 0
+end
+
 function Nemesis:center()
     if self:isClosestTileWall(self.currentDirection) == true and self:isInTileCenter() == true then
-        if walls:isTileWall(self:getClosestTile(randomDirection)) == false then
-            self.currentDirection = self:randomMove()
-        end
+        self:setCurrentDirection(self:getRandomDirection())
     end
 end

@@ -28,7 +28,7 @@ function Entity:updateCollider()
 end
 
 function Entity:checkBoundaries()
-    if self.y < -self.diameter then -- eu q fiz assinado por rora
+    if self.y < -self.diameter then
         self.collider:setY(love.graphics.getHeight() + self.radius)
     elseif self.x < -self.diameter then
         self.collider:setX(love.graphics.getWidth() + self.radius)
@@ -81,12 +81,12 @@ function Entity:isInTileCenter()
     local entityCenterY = self.y + self.diameter / 2
     local tileCenterX = currentTileX + currentTileWidth
     local tileCenterY = currentTileY + currentTileHeight 
-    local approximation = 1 / self.radius * 75 
+    local approximation = 1 / self.radius * 90 
 
     if approximatelyEquals(entityCenterX, tileCenterX, approximation) and 
        approximatelyEquals(entityCenterY, tileCenterY, approximation) then
         return true
-    end -- boa tudo funcionando ate agr
+    end
     return false
 end
 
@@ -108,8 +108,8 @@ function Entity:isAbleToTurn()
     return false
 end
 
-function Entity:turnWantDirection() -- após finalizar, colocar função no update e testar
+function Entity:turnWantDirection()
     if self.currentDirection ~= self.wantDirection and self:isAbleToTurn() == true then
-        self.currentDirection = self.wantDirection -- n ta conseguindo abrir o chat?
+        self.currentDirection = self.wantDirection
     end
 end
